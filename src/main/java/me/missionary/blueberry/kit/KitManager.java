@@ -39,6 +39,7 @@ public class KitManager extends Manager implements Listener {
         this.kits = new HashMap<>();
         this.equippedKits = new HashMap<>();
         getPlugin().getServer().getPluginManager().registerEvents(this, getPlugin());
+        onDisable();
     }
 
     @Override

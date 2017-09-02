@@ -69,7 +69,9 @@ public class Blueberry extends JavaPlugin {
 
     @Override
     public void onDisable() {
+        kitManager.onDisable();
         profileManager.onDisable();
+        uuidManager.save();
         gson = null;
         plugin = null;
     }
