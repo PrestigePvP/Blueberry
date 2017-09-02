@@ -1,0 +1,6 @@
+database:
+  host: 'HOSTNAME'
+  database-name: 'DATABASENAME'
+  port: 27015
+  password: 'YOURPASSWORDHERE'
+  user: 'USERNAMEHERE'
