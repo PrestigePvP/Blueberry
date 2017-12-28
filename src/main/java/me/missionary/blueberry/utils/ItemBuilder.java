@@ -295,4 +295,33 @@ public class ItemBuilder {
         return is;
     }
 
+    public enum Pane
+    {
+        WHITE("WHITE", 0, 0),
+        ORANGE("ORANGE", 1, 1),
+        MAGENTA("MAGENTA", 2, 2),
+        LIGHT_BLUE("LIGHT_BLUE", 3, 3),
+        YELLOW("YELLOW", 4, 4),
+        LIME("LIME", 5, 5),
+        PINK("PINK", 6, 6),
+        GRAY("GRAY", 7, 7),
+        LIGHT_GRAY("LIGHT_GRAY", 8, 8),
+        CYAN("CYAN", 9, 9),
+        PURPLE("PURPLE", 10, 10),
+        BLUE("BLUE", 11, 11),
+        BROWN("BROWN", 12, 12),
+        GREEN("GREEN", 13, 13),
+        RED("RED", 14, 14),
+        BLACK("BLACK", 15, 15);
+
+        private int value;
+
+        Pane(final String s, final int n, final int value) {
+            this.value = value;
+        }
+
+        public int value() {
+            return this.value;
+        }
+    }
 }

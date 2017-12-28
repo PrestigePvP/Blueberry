@@ -12,9 +12,10 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
-import org.bukkit.event.inventory.EquipmentSetEvent;
+import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.scheduler.BukkitRunnable;
 
 import javax.annotation.Nullable;
 import java.util.HashMap;
@@ -48,7 +49,7 @@ public class KitManager extends Manager implements Listener {
     }
 
     public Kit getEquippedKit(Player player) {
-        return equippedKits.get(player.getUniqueId());
+        return equippedKits.getOrDefault(player.getUniqueId(), null);
     }
 
     public void setEquippedKit(Player player, @Nullable Kit kit) {
@@ -75,11 +76,19 @@ public class KitManager extends Manager implements Listener {
     }
 
     @EventHandler(ignoreCancelled = true, priority = EventPriority.MONITOR)
-    public void onEquipmentSet(EquipmentSetEvent event) {
-        HumanEntity humanEntity = event.getHumanEntity();
-        if (humanEntity instanceof Player) {
-            attemptEquip((Player) humanEntity);
-        }
+    public void onPlayerJoin(PlayerJoinEvent event) {
+        final Player player = event.getPlayer();
+        new BukkitRunnable() {
+            @Override
+            public void run() {
+                if (!player.isOnline()) {
+                    cancel();
+                    return;
+                }
+
+                attemptEquip(player);
+            }
+        }.runTaskTimer(getPlugin(), 20L, 20L);
     }
 
     private void attemptEquip(Player player) {

@@ -1,0 +1,11 @@
+SCOREBOARD:
+  TITLE: "&3&lFree-For-All"
+  LINES:
+    - "&r&7&m---------------------"
+    - "&c&lKills&7: &f%kills%"
+    - "&e&lDate&7: &f%date%"
+    - "&7&m---------------------&r"
+SPAWN:
+  SPAWNPOINT: "world;0;99;0"
+  MIN:
+  MAX:

@@ -8,18 +8,23 @@
     <artifactId>Blueberry</artifactId>
     <version>1.0-SNAPSHOT</version>
 
+    <repositories>
+        <repository>
+            <id>sk89q-repo</id>
+            <url>http://maven.sk89q.com/repo/</url>
+        </repository>
+    </repositories>
+
     <dependencies>
         <dependency>
-            <groupId>org.github.paperspigot</groupId>
-            <artifactId>paperspigot</artifactId>
+            <groupId>me.missionary.lavenderspigot</groupId>
+            <artifactId>LavenderSpigot</artifactId>
             <version>1.7.10-R0.1-SNAPSHOT</version>
-            <scope>provided</scope>
         </dependency>
         <dependency>
-            <groupId>org.github.paperspigot</groupId>
-            <artifactId>paperspigot-api</artifactId>
+            <groupId>me.missionary.lavenderspigot</groupId>
+            <artifactId>LavenderSpigot-API</artifactId>
             <version>1.7.10-R0.1-SNAPSHOT</version>
-            <scope>provided</scope>
         </dependency>
         <dependency>
             <groupId>mkremins</groupId>
@@ -34,11 +39,22 @@
             <scope>provided</scope>
         </dependency>
         <dependency>
+            <groupId>com.sk89q.worldedit</groupId>
+            <artifactId>worldedit-bukkit</artifactId>
+            <version>6.1.1-SNAPSHOT</version>
+        </dependency>
+        <dependency>
             <groupId>org.mongodb</groupId>
             <artifactId>mongo-java-driver</artifactId>
             <version>3.5.0</version>
             <scope>compile</scope>
         </dependency>
+       <!-- <dependency>
+            <groupId>com.github.ben-manes.caffeine</groupId>
+            <artifactId>caffeine</artifactId>
+            <version>2.5.5</version>
+            <scope>compile</scope>
+        </dependency>-->
     </dependencies>
 
     <build>
@@ -55,6 +71,33 @@
         </resources>
 
         <plugins>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-shade-plugin</artifactId>
+                <version>3.0.0</version>
+                <executions>
+                    <execution>
+                        <phase>package</phase>
+                        <goals>
+                            <goal>shade</goal>
+                        </goals>
+                    </execution>
+                </executions>
+                <configuration>
+                    <shadedArtifactAttached>false</shadedArtifactAttached>
+                    <createDependencyReducedPom>false</createDependencyReducedPom>
+                    <artifactSet>
+                        <includes>
+                            <include>org.apache.commons:commons-pool2</include>
+                            <include>com.mongodb:mongodb-driver</include>
+                            <include>org.mongodb:mongodb-driver-core</include>
+                            <include>org.mongodb:mongo-java-driver</include>
+                            <include>org.mongodb:bson</include>
+                            <include>com.google.code.gson:gson</include>
+                        </includes>
+                    </artifactSet>
+                </configuration>
+            </plugin>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-compiler-plugin</artifactId>
