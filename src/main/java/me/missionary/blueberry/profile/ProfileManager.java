@@ -87,6 +87,7 @@ public class ProfileManager extends Manager implements IProfileManager {
             Bukkit.getLogger().info("Whilst pulling the TimeZone for " + profile.getUuid() + " the player was not online, cancelling.");
             return;
         }
+        System.out.println("Called");
         JsonObject object;
         try {
            object = new JsonParser().parse(IOUtils.toString(new URL(GEO_IP_BASE_URL + profile.getPlayer().get().getAddress().getAddress().getHostAddress()))).getAsJsonObject();

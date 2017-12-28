@@ -120,6 +120,7 @@ public class Blueberry extends JavaPlugin {
         kitManager.onDisable();
         profileManager.onDisable();
         uuidManager.save();
+        spawnManager.onDisable();
         gson = null;
         plugin = null;
     }
