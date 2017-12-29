@@ -11,6 +11,7 @@ import me.missionary.blueberry.combatlogger.commands.LogoutCommand;
 import me.missionary.blueberry.kit.KitManager;
 import me.missionary.blueberry.listeners.CombatTagListener;
 import me.missionary.blueberry.listeners.EnderpearlListener;
+import me.missionary.blueberry.listeners.KillsDeathsListener;
 import me.missionary.blueberry.profile.Profile;
 import me.missionary.blueberry.profile.ProfileManager;
 import me.missionary.blueberry.profile.ProfileSerializer;
@@ -113,7 +114,8 @@ public class Blueberry extends JavaPlugin {
                 new LogoutListener(this),
                 new KitManager(this),
                 new SpawnListeners(this),
-                new EnderpearlListener())
+                new EnderpearlListener(),
+                new KillsDeathsListener(this))
                 .forEach(listener -> getServer().getPluginManager().registerEvents(listener, this));
     }
 

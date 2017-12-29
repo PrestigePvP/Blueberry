@@ -3,6 +3,7 @@ package me.missionary.blueberry.listeners;
 import me.missionary.blueberry.Blueberry;
 import me.missionary.blueberry.scoreboard.Scoreboard;
 import me.missionary.blueberry.scoreboard.timer.Timer;
+import org.bukkit.ChatColor;
 import org.bukkit.entity.Arrow;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -38,6 +39,21 @@ public class CombatTagListener implements Listener {
                     } else {
                         Scoreboard.getPlayer(damager).getTimer(COMBAT_TAG_KEY).setNewEnd(30L);
                     }
+                }
+            }
+        }
+    }
+
+    @EventHandler
+    public void onBowHitEvent(EntityDamageByEntityEvent event) {
+        if (event.getEntity() instanceof Player) {
+            Player player = (Player) event.getEntity();
+            if (event.getDamager() instanceof Arrow) {
+                Arrow arrow = (Arrow) event.getDamager();
+                if (arrow.getShooter() instanceof Player) {
+                    Player shooter = (Player) arrow.getShooter();
+                    player.sendMessage(ChatColor.GOLD + "You are now at " + ChatColor.RED + player.getHealth() / 2 + ChatColor.GOLD + " hearts.");
+                    shooter.sendMessage(player.getName() + ChatColor.GOLD +  " is now at " + ChatColor.RED + player.getHealth() / 2 + ChatColor.GOLD + " hearts.");
                 }
             }
         }

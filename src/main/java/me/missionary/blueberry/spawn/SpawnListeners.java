@@ -12,6 +12,7 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
+import org.bukkit.event.entity.EntityDamageEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.event.player.PlayerMoveEvent;
@@ -57,6 +58,16 @@ public class SpawnListeners implements Listener {
         if (plugin.getSpawnManager().contains(event.getTo()) && Scoreboard.getPlayer(event.getPlayer()).getTimer(CombatTagListener.COMBAT_TAG_KEY) != null) {
             event.setTo(event.getFrom());
 
+        }
+    }
+
+    @EventHandler
+    public void onDamage(EntityDamageEvent event){
+        if (event.getEntity() instanceof Player){
+            Player player = (Player) event.getEntity();
+            if (plugin.getSpawnManager().contains(player.getLocation())){
+                event.setCancelled(true);
+            }
         }
     }
 }
