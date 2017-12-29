@@ -23,11 +23,6 @@ public class SetSpawnPointCommand extends GenericArgument {
 
         SpawnManager spawnManager = getPlugin().getSpawnManager();
 
-        if (!spawnManager.contains(player.getLocation())){
-            player.sendMessage(ChatColor.RED + "The spawn location must be within the spawn area. \nDo so by making a WorldEdit selection and running /setspawnarea");
-            return;
-        }
-
         spawnManager.setSpawnPoint(player.getLocation().clone().add(0, 0.5, 0)); // Add .5 to a cloned player location to prevent being stuck in blocks.
     }
 }

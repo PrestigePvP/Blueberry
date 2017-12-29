@@ -147,8 +147,8 @@ public interface InventoryContents {
 
         @Override
         public InventoryContents add(ClickableItem item) {
-            for (int i = inv.getRows(); i < inv.getRows(); i++){
-                for (int j = inv.getColumns(); j < inv.getColumns(); j++){
+            for (int i = 0; i < inv.getRows(); i++){
+                for (int j = 0; j < inv.getColumns(); j++){
                     if (contents[i][j] == null){
                         set(i, j, item);
                     }

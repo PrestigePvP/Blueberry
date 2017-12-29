@@ -5,6 +5,7 @@ import me.missionary.blueberry.Blueberry;
 import me.missionary.blueberry.kit.kits.NoDebuffKit;
 import me.missionary.blueberry.utils.ItemBuilder;
 import me.missionary.blueberry.utils.Manager;
+import net.minecraft.util.org.apache.commons.lang3.tuple.Pair;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.entity.HumanEntity;
@@ -18,9 +19,7 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.scheduler.BukkitRunnable;
 
 import javax.annotation.Nullable;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.UUID;
+import java.util.*;
 
 /**
  * Created by Missionary (missionarymc@gmail.com) on 9/1/2017.
@@ -30,25 +29,28 @@ public class KitManager extends Manager implements Listener {
     public static final ItemStack KIT_SELECTOR = new ItemBuilder(Material.WATCH).setName(ChatColor.AQUA + "Choose a Kit").toItemStack();
 
     @Getter
-    private Map<Class<? extends Kit>, Kit> kits;
+    private List<Kit> kits;
 
     @Getter
     private Map<UUID, Kit> equippedKits;
 
     public KitManager(Blueberry plugin) {
         super(plugin);
-        this.kits = new HashMap<>();
+        this.kits = new ArrayList<>();
         this.equippedKits = new HashMap<>();
         getPlugin().getServer().getPluginManager().registerEvents(this, getPlugin());
-        onDisable();
     }
 
     @Override
     public void onEnable() {
-        kits.put(NoDebuffKit.class, new NoDebuffKit(getPlugin()));
+        kits.add(new NoDebuffKit(getPlugin()));
     }
 
-    public Kit getEquippedKit(Player player) {
+    public Optional<Kit> getEquippedKit(Player player) {
+        return Optional.ofNullable(equippedKits.getOrDefault(player.getUniqueId(), null));
+    }
+
+    private Kit getLocalEquippedKit(Player player) {
         return equippedKits.getOrDefault(player.getUniqueId(), null);
     }
 
@@ -59,7 +61,7 @@ public class KitManager extends Manager implements Listener {
                 player.getInventory().clear();
                 player.getInventory().setArmorContents(new ItemStack[4]); // nothing
             }
-        } else if (kit != this.getEquippedKit(player)) {
+        } else if (kit != this.getLocalEquippedKit(player)) {
             equippedKits.put(player.getUniqueId(), kit);
             player.getInventory().clear();
             kit.giveItems(player);
@@ -67,7 +69,7 @@ public class KitManager extends Manager implements Listener {
     }
 
     public boolean hasKitEquipped(Player player, Kit kit) {
-        return getEquippedKit(player) == kit;
+        return getLocalEquippedKit(player) == kit;
     }
 
     @EventHandler(ignoreCancelled = true, priority = EventPriority.MONITOR)
@@ -92,16 +94,16 @@ public class KitManager extends Manager implements Listener {
     }
 
     private void attemptEquip(Player player) {
-        Kit current = getPlugin().getKitManager().getEquippedKit(player);
+        Kit current = getPlugin().getKitManager().getLocalEquippedKit(player);
         if (current != null) {
             if (current.isApplicable(player)) return;
             getPlugin().getKitManager().setEquippedKit(player, null);
         }
-        kits.values().stream().filter(kit -> kit.isApplicable(player)).findFirst().ifPresent(kit -> setEquippedKit(player, kit));
+        kits.stream().filter(kit -> kit.isApplicable(player)).findFirst().ifPresent(kit -> setEquippedKit(player, kit));
     }
 
     public Kit getKitByIcon(ItemStack icon){
-        return kits.values().stream().filter(kit -> kit.getIcon().isSimilar(icon)).findFirst().orElse(null);
+        return kits.stream().filter(kit -> kit.getIcon().isSimilar(icon)).findFirst().orElse(null);
     }
 
     @Override

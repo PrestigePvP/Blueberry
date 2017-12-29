@@ -4,11 +4,13 @@ import com.mongodb.MongoClient;
 import com.mongodb.MongoClientURI;
 import com.mongodb.client.MongoDatabase;
 import lombok.Getter;
+import me.missionary.blueberry.combatlogger.LoggerManager;
 import me.missionary.blueberry.combatlogger.LogoutListener;
 import me.missionary.blueberry.combatlogger.LogoutTaskManager;
 import me.missionary.blueberry.combatlogger.commands.LogoutCommand;
 import me.missionary.blueberry.kit.KitManager;
 import me.missionary.blueberry.listeners.CombatTagListener;
+import me.missionary.blueberry.listeners.EnderpearlListener;
 import me.missionary.blueberry.profile.Profile;
 import me.missionary.blueberry.profile.ProfileManager;
 import me.missionary.blueberry.profile.ProfileSerializer;
@@ -19,6 +21,7 @@ import me.missionary.blueberry.spawn.SpawnListeners;
 import me.missionary.blueberry.spawn.SpawnManager;
 import me.missionary.blueberry.spawn.commands.SetSpawnAreaCommand;
 import me.missionary.blueberry.spawn.commands.SetSpawnPointCommand;
+import me.missionary.blueberry.utils.Manager;
 import me.missionary.blueberry.utils.UUIDManager;
 import me.missionary.blueberry.utils.commands.CommandFramework;
 import me.missionary.blueberry.utils.inventory.InventoryManager;
@@ -69,12 +72,15 @@ public class Blueberry extends JavaPlugin {
     @Getter
     private LogoutTaskManager logoutTaskManager;
 
+    @Getter
+    private LoggerManager loggerManager;
+
     @Override
     public void onEnable() {
         plugin = this;
+        initalizeMongo();
         saveDefaultConfig();
         gson = new GsonBuilder().registerTypeAdapter(Profile.class, new ProfileSerializer()).setPrettyPrinting().serializeNulls().create();
-        initalizeMongo();
         initalizeManagers();
         initalizeListeners();
         initalizeCommands();
@@ -88,7 +94,9 @@ public class Blueberry extends JavaPlugin {
         kitManager = new KitManager(this);
         spawnManager = new SpawnManager(this);
         logoutTaskManager = new LogoutTaskManager(this);
+        loggerManager = new LoggerManager(this);
         new Scoreboard(this, new Options(), new BlueberryImpl());
+        Arrays.asList(profileManager, kitManager, spawnManager).forEach(Manager::onEnable); // A shitty workaround to fix a race condition.
     }
 
     private void initalizeMongo() {
@@ -104,7 +112,8 @@ public class Blueberry extends JavaPlugin {
         Arrays.asList(new CombatTagListener(),
                 new LogoutListener(this),
                 new KitManager(this),
-                new SpawnListeners(this))
+                new SpawnListeners(this),
+                new EnderpearlListener())
                 .forEach(listener -> getServer().getPluginManager().registerEvents(listener, this));
     }
 

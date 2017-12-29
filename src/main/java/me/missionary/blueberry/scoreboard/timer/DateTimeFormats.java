@@ -3,6 +3,7 @@ package me.missionary.blueberry.scoreboard.timer;
 import lombok.experimental.UtilityClass;
 import org.apache.commons.lang.time.DateFormatUtils;
 import org.apache.commons.lang.time.DateUtils;
+import org.apache.commons.lang.time.DurationFormatUtils;
 import org.apache.commons.lang.time.FastDateFormat;
 
 import java.text.DecimalFormat;
@@ -12,6 +13,7 @@ import java.time.ZonedDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.Locale;
 import java.util.TimeZone;
+import java.util.concurrent.TimeUnit;
 
 @UtilityClass
 public class DateTimeFormats {
@@ -52,5 +54,9 @@ public class DateTimeFormats {
     public String getFormattedTimeBasedOnTimeZone(TimeZone timeZone){
         FastDateFormat dateFormat = FastDateFormat.getInstance(MTH_DAY_HR_MIN_AMPM.getPattern(), timeZone, Locale.ENGLISH);
         return dateFormat.format(System.currentTimeMillis());
+    }
+
+    public static String getRemaining(final long duration, final boolean milliseconds, final boolean trail) {
+        return milliseconds && duration < TimeUnit.MINUTES.toMillis(1L) ? (trail ? DateTimeFormats.REMAINING_SECONDS_TRAILING : DateTimeFormats.REMAINING_SECONDS).get().format(duration * 0.001) + 's' : DurationFormatUtils.formatDuration(duration, ((duration >= TimeUnit.HOURS.toMillis(1L)) ? "HH:" : "") + "mm:ss");
     }
 }

@@ -32,11 +32,13 @@ public class SpawnListeners implements Listener {
             plugin.getProfileManager().createProfile(event.getPlayer().getUniqueId());
         }
         Player player = event.getPlayer();
+        event.setJoinMessage(null);
         player.teleport(plugin.getSpawnManager().getSpawnPoint() == null ? Bukkit.getWorld("world").getSpawnLocation() : plugin.getSpawnManager().getSpawnPoint());
         player.getInventory().clear();
         player.getInventory().setArmorContents(new ItemStack[4]);
         player.sendMessage(ChatColor.AQUA + "Welcome to FFA!");
         player.getInventory().setItem(0, KitManager.KIT_SELECTOR);
+        plugin.getProfileManager().getProfile(player.getUniqueId()).ifPresent(profile1 -> plugin.getServer().getScheduler().runTaskAsynchronously(plugin, () -> plugin.getProfileManager().getPlayerTimeZone(profile1)));
     }
 
     @EventHandler

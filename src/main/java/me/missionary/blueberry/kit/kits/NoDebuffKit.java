@@ -56,6 +56,7 @@ public class NoDebuffKit extends Kit {
         inventory.setLeggings(new ItemBuilder(Material.DIAMOND_LEGGINGS).addEnchant(Enchantment.PROTECTION_ENVIRONMENTAL, 1).setUnbreakable().toItemStack());
         inventory.setBoots(new ItemBuilder(Material.DIAMOND_BOOTS).addEnchant(Enchantment.PROTECTION_ENVIRONMENTAL, 1).addEnchant(Enchantment.PROTECTION_FALL, 3).setUnbreakable().toItemStack());
         // TODO: 9/1/2017 Add some speeds.
-        IntStream.range(0, 35).mapToObj(i -> new ItemBuilder(Material.POTION).setDurability((short) 16241).toItemStack()).forEach(inventory::addItem);
+        IntStream.range(0, 35).mapToObj(i -> new ItemBuilder(Material.POTION).setDurability((short) 16421).toItemStack()).forEach(inventory::addItem);
+        player.closeInventory();
     }
 }

@@ -36,7 +36,8 @@ public class BlueberryImpl implements BoardProvider {
                    entries.add(line.replace("%date%", DateTimeFormats.getFormattedTimeBasedOnTimeZone(profile.getTimeZone())));
                }
            }
-           Scoreboard.getPlayer(player).getTimers().forEach(timer -> entries.add(timer.getName() + ": " + timer.getFormattedString()));
+           Blueberry.getPlugin().getKitManager().getEquippedKit(player).ifPresent(kit -> entries.add("Kit: " + kit.getName()));
+           Scoreboard.getPlayer(player).getTimers().forEach(timer -> entries.add(timer.getName() + ": " + DateTimeFormats.getRemaining(timer.getEnd() - System.currentTimeMillis(), true, true)));
        });
        return entries;
     }

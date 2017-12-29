@@ -39,16 +39,14 @@ public class SpawnManager extends Manager {
     @Override
     public void onEnable() {
         spawnPoint = LocationUtils.generateLocFromString(getPlugin().getConfig().getString("SPAWN.SPAWNPOINT"));
-        ConfigurationSection minSection = getPlugin().getConfig().getConfigurationSection("SPAWN.MIN");
-        min = Vector.deserialize(minSection.getValues(true));
-        ConfigurationSection maxSection = getPlugin().getConfig().getConfigurationSection("SPAWN.MAX");
-        max = Vector.deserialize(maxSection.getValues(true));
+        min = LocationUtils.deserialize(getPlugin().getConfig().getString("SPAWN.MIN"));
+        max = LocationUtils.deserialize(getPlugin().getConfig().getString("SPAWN.MAX"));
     }
 
     @Override
     public void onDisable() {
         getPlugin().getConfig().set("SPAWN.SPAWNPOINT", LocationUtils.getLocationAsString(spawnPoint));
-        getPlugin().getConfig().set("SPAWN.MIN", min.serialize());
-        getPlugin().getConfig().set("SPAWN.MAX", max.serialize());
+        getPlugin().getConfig().set("SPAWN.MIN", LocationUtils.serializeVector(min));
+        getPlugin().getConfig().set("SPAWN.MAX", LocationUtils.serializeVector(max));
     }
 }

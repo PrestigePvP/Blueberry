@@ -41,7 +41,6 @@ public class ProfileManager extends Manager implements IProfileManager {
         this.plugin = plugin;
         this.mongoCollection = getPlugin().getMongoDatabase().getCollection("blueberryProfiles");
         profiles = new ConcurrentHashMap<>(); // The scoreboard runs async, need this for thread safety.
-        onEnable();
     }
 
     @Override
@@ -60,11 +59,7 @@ public class ProfileManager extends Manager implements IProfileManager {
     public void createProfile(UUID uuid) {
         Profile profile = new Profile(uuid);
         profiles.put(uuid, profile);
-        AtomicReference<Profile> player = new AtomicReference<>(profile);
-        plugin.getServer().getScheduler().runTaskAsynchronously(plugin, () -> {
-            getPlayerTimeZone(player.get());
-            mongoCollection.insertOne(Document.parse(Blueberry.getGson().toJson(profile)));
-        });
+        plugin.getServer().getScheduler().runTaskAsynchronously(plugin, () -> mongoCollection.insertOne(Document.parse(Blueberry.getGson().toJson(profile))));
     }
 
     @Override
@@ -82,12 +77,11 @@ public class ProfileManager extends Manager implements IProfileManager {
         return Optional.empty();
     }
 
-    private void getPlayerTimeZone(Profile profile){
+    public void getPlayerTimeZone(Profile profile){
         if (!profile.getPlayer().isPresent()){
             Bukkit.getLogger().info("Whilst pulling the TimeZone for " + profile.getUuid() + " the player was not online, cancelling.");
             return;
         }
-        System.out.println("Called");
         JsonObject object;
         try {
            object = new JsonParser().parse(IOUtils.toString(new URL(GEO_IP_BASE_URL + profile.getPlayer().get().getAddress().getAddress().getHostAddress()))).getAsJsonObject();

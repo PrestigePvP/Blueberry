@@ -1,6 +1,5 @@
 package me.missionary.blueberry.combatlogger;
 
-import lombok.Getter;
 import me.missionary.blueberry.Blueberry;
 import org.bukkit.entity.Player;
 
@@ -32,7 +31,7 @@ public class LogoutTaskManager {
     }
 
     public Optional<LogoutTask> getLogoutTask(Player player){
-        return Optional.of(taskMap.get(player.getUniqueId()));
+        return Optional.ofNullable(taskMap.get(player.getUniqueId()));
     }
 
     public void removeLogoutTask(LogoutTask task){

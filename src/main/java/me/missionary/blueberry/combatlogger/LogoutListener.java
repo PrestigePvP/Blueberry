@@ -2,10 +2,9 @@ package me.missionary.blueberry.combatlogger;
 
 import lombok.RequiredArgsConstructor;
 import me.missionary.blueberry.Blueberry;
-import me.missionary.blueberry.combatlogger.npc.EntityNPC;
+import me.missionary.blueberry.combatlogger.entity.LoggerEntity;
 import me.missionary.blueberry.scoreboard.Scoreboard;
 import me.missionary.blueberry.utils.PlayerUtil;
-import org.bukkit.craftbukkit.v1_7_R4.CraftWorld;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
@@ -50,7 +49,7 @@ public class LogoutListener implements Listener {
             plugin.getLogoutTaskManager().removeLogoutTask(task);
         });
 
-        if (!isInCombat) {
+        if (!isInCombat || plugin.getSpawnManager().contains(player.getLocation())) {
             player.teleport(plugin.getSpawnManager().getSpawnPoint()); // Teleport the player to spawn.
             player.kickPlayer(LOGOUT_MESSAGE);
             return;
@@ -58,13 +57,12 @@ public class LogoutListener implements Listener {
 
         PlayerUtil.recursivelyRemoveFromVehicle(player);
 
-
         plugin.getServer().getScheduler().runTaskLater(plugin, () -> {
             if (player.isOnline()) {
                 return;
             }
-            new EntityNPC(((CraftWorld) player.getLocation().getWorld()).getHandle(), player, 30);
-        }, 10L);
+            plugin.getLoggerManager().addLogger(new LoggerEntity(plugin, player));
+        }, 1L);
 
     }
 }

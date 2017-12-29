@@ -4,6 +4,7 @@ import lombok.experimental.UtilityClass;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.World;
+import org.bukkit.util.Vector;
 
 /**
  * Created by Missionary (missionarymc@gmail.com) on 3/14/2017.
@@ -12,7 +13,11 @@ import org.bukkit.World;
 public class LocationUtils {
 
     public Location generateLocFromString(String value) {
-        String[] values = value.split(",");
+        if (value == null){
+            return null;
+        }
+
+        String[] values = value.split(";");
 
         World world = Bukkit.getWorld(values[0]);
         Double x = Double.parseDouble(values[1]);
@@ -23,6 +28,21 @@ public class LocationUtils {
     }
 
     public String getLocationAsString(Location location) {
-        return location.toString();
+        return location.getWorld().getName() + ";" + location.getX() + ";" + location.getY() + ";" + location.getZ();
+    }
+
+    public Vector deserialize(String input){
+        if (input == null){
+            return null;
+        }
+        String[] split = input.split(";");
+        double x = Double.parseDouble(split[0]);
+        double y = Double.parseDouble(split[1]);
+        double z = Double.parseDouble(split[2]);
+        return new Vector(x, y , z);
+    }
+
+    public String serializeVector(Vector input){
+        return input.getX() + ";" + input.getY() + ";" + input.getZ();
     }
 }

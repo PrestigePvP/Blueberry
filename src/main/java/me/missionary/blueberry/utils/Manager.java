@@ -15,8 +15,6 @@ public abstract class Manager { // Makes thing look cleaner.
         this.plugin = plugin;
     }
 
-    protected Manager() {
-    }
 
     public abstract void onEnable();
 

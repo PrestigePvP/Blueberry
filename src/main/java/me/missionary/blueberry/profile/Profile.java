@@ -12,7 +12,7 @@ import java.util.UUID;
 /**
  * Created by Missionary (missionarymc@gmail.com) on 9/1/2017.
  */
-public class Profile { // TODO: 9/1/2017 Add kills, deaths, killstreaks.
+public class Profile { // TODO: 9/1/2017 Add killstreaks.
 
     @Getter
     private final UUID uuid;
