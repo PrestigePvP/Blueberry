@@ -5,10 +5,8 @@ import me.missionary.blueberry.Blueberry;
 import me.missionary.blueberry.kit.kits.NoDebuffKit;
 import me.missionary.blueberry.utils.ItemBuilder;
 import me.missionary.blueberry.utils.Manager;
-import net.minecraft.util.org.apache.commons.lang3.tuple.Pair;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
-import org.bukkit.entity.HumanEntity;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
@@ -57,10 +55,6 @@ public class KitManager extends Manager implements Listener {
     public void setEquippedKit(Player player, @Nullable Kit kit) {
         if (kit == null) {
             Kit equipped = equippedKits.remove(player.getUniqueId());
-            if (equipped != null) {
-                player.getInventory().clear();
-                player.getInventory().setArmorContents(new ItemStack[4]); // nothing
-            }
         } else if (kit != this.getLocalEquippedKit(player)) {
             equippedKits.put(player.getUniqueId(), kit);
             player.getInventory().clear();
@@ -108,6 +102,5 @@ public class KitManager extends Manager implements Listener {
 
     @Override
     public void onDisable() {
-        equippedKits.forEach((uuid, kit) -> setEquippedKit(getPlugin().getServer().getPlayer(uuid), null));
     }
 }

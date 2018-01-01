@@ -7,7 +7,7 @@ package me.missionary.blueberry.scoreboard;
 import lombok.Getter;
 import lombok.Setter;
 import me.missionary.blueberry.scoreboard.board.Board;
-import me.missionary.blueberry.scoreboard.interfaces.BoardProvider;
+import me.missionary.blueberry.scoreboard.board.BoardProvider;
 import net.minecraft.util.com.google.common.collect.Maps;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;

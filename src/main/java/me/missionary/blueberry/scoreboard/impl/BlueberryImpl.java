@@ -1,11 +1,12 @@
 package me.missionary.blueberry.scoreboard.impl;
 
 import me.missionary.blueberry.Blueberry;
-import me.missionary.blueberry.profile.Profile;
+import me.missionary.blueberry.listeners.CombatTagListener;
+import me.missionary.blueberry.listeners.EnderpearlListener;
 import me.missionary.blueberry.scoreboard.Scoreboard;
-import me.missionary.blueberry.scoreboard.interfaces.BoardProvider;
+import me.missionary.blueberry.scoreboard.board.Board;
+import me.missionary.blueberry.scoreboard.board.BoardProvider;
 import me.missionary.blueberry.scoreboard.timer.DateTimeFormats;
-import me.missionary.blueberry.scoreboard.timer.Format;
 import me.missionary.blueberry.scoreboard.timer.Timer;
 import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
@@ -25,21 +26,35 @@ public class BlueberryImpl implements BoardProvider {
 
     @Override
     public List<String> provide(Player player, Set<Timer> timers) {
-       List<String> entries = new ArrayList<>();
-       Blueberry.getPlugin().getProfileManager().getProfile(player.getUniqueId()).ifPresent(profile -> {
-           for (String line : SCOREBOARD_LINES) {
-               if (line.contains("%kills%")) {
-                   entries.add(line.replace("%kills%", String.valueOf(profile.getKills())));
-               } else if (line.contains("%deaths%")) {
-                   entries.add(line.replace("%deaths%", String.valueOf(profile.getDeaths())));
-               } else if (line.contains("%date%")) {
-                   entries.add(line.replace("%date%", DateTimeFormats.getFormattedTimeBasedOnTimeZone(profile.getTimeZone())));
-               }
-           }
-           Blueberry.getPlugin().getKitManager().getEquippedKit(player).ifPresent(kit -> entries.add("Kit: " + kit.getName()));
-           Scoreboard.getPlayer(player).getTimers().forEach(timer -> entries.add(timer.getName() + ": " + DateTimeFormats.getRemaining(timer.getEnd() - System.currentTimeMillis(), true, true)));
-       });
-       return entries;
+        List<String> entries = new ArrayList<>();
+        Board board = Scoreboard.getPlayer(player);
+        Blueberry.getPlugin().getProfileManager().getProfile(player.getUniqueId()).ifPresent(profile -> {
+            for (String line : SCOREBOARD_LINES) {
+                if (line.contains("%kills%")) {
+                    entries.add(line.replace("%kills%", String.valueOf(profile.getKills())));
+                } else if (line.contains("%kills_this%")) {
+                    entries.add(line.replace("%kills_this%", String.valueOf(profile.getKillsThisGame())));
+                } else if (line.contains("%deaths%")) {
+                    entries.add(line.replace("%deaths%", String.valueOf(profile.getDeaths())));
+                } else if (line.contains("%date%")) {
+                    entries.add(line.replace("%date%", DateTimeFormats.getFormattedTimeBasedOnTimeZone(profile.getTimeZone())));
+                } else if (line.contains("%combattag%")) {
+                    if (board.getTimer(CombatTagListener.COMBAT_TAG_KEY) != null) {
+                        entries.add(line.replace("%combattag%", DateTimeFormats.getRemaining(board.getTimer(CombatTagListener.COMBAT_TAG_KEY).getEnd() - System.currentTimeMillis(), true, true)));
+                    }
+                } else if (line.contains("%enderpearl%")) {
+                    if (board.getTimer(EnderpearlListener.ENDERPEARL_COOLDOWN_KEY) != null) {
+                        entries.add(line.replace("%enderpearl%", DateTimeFormats.getRemaining(board.getTimer(EnderpearlListener.ENDERPEARL_COOLDOWN_KEY).getEnd() - System.currentTimeMillis(), true, true)));
+                    }
+                } else if (line.contains("%kit%")) {
+                    Blueberry.getPlugin().getKitManager().getEquippedKit(player).ifPresent(kit -> entries.add(line.replace("%kit%", kit.getName())));
+                } else {
+                    entries.add(line);
+                }
+            }
+        });
+
+        return entries.size() <= 2 ? null : entries;
     }
 
     @Override

@@ -11,10 +11,12 @@ import me.missionary.blueberry.combatlogger.commands.LogoutCommand;
 import me.missionary.blueberry.kit.KitManager;
 import me.missionary.blueberry.listeners.CombatTagListener;
 import me.missionary.blueberry.listeners.EnderpearlListener;
+import me.missionary.blueberry.listeners.GenericPreventionListeners;
 import me.missionary.blueberry.listeners.KillsDeathsListener;
 import me.missionary.blueberry.profile.Profile;
 import me.missionary.blueberry.profile.ProfileManager;
 import me.missionary.blueberry.profile.ProfileSerializer;
+import me.missionary.blueberry.profile.commands.StatsCommand;
 import me.missionary.blueberry.scoreboard.Options;
 import me.missionary.blueberry.scoreboard.Scoreboard;
 import me.missionary.blueberry.scoreboard.impl.BlueberryImpl;
@@ -80,7 +82,7 @@ public class Blueberry extends JavaPlugin {
     public void onEnable() {
         plugin = this;
         initalizeMongo();
-        saveDefaultConfig();
+        saveConfig();
         gson = new GsonBuilder().registerTypeAdapter(Profile.class, new ProfileSerializer()).setPrettyPrinting().serializeNulls().create();
         initalizeManagers();
         initalizeListeners();
@@ -115,14 +117,16 @@ public class Blueberry extends JavaPlugin {
                 new KitManager(this),
                 new SpawnListeners(this),
                 new EnderpearlListener(),
-                new KillsDeathsListener(this))
+                new KillsDeathsListener(this),
+                new GenericPreventionListeners(this))
                 .forEach(listener -> getServer().getPluginManager().registerEvents(listener, this));
     }
 
     private void initalizeCommands() {
         Arrays.asList(new LogoutCommand(this),
                 new SetSpawnAreaCommand(this),
-                new SetSpawnPointCommand(this))
+                new SetSpawnPointCommand(this),
+                new StatsCommand(this))
                 .forEach(genericArgument -> commandFramework.registerCommands(genericArgument));
     }
 

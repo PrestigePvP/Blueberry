@@ -47,6 +47,7 @@ public class SetSpawnAreaCommand extends GenericArgument {
         SpawnManager spawnManager = getPlugin().getSpawnManager();
         spawnManager.setMin(selection.getMinimumPoint().toVector());
         spawnManager.setMax(selection.getMaximumPoint().toVector());
+        spawnManager.setWorldName(selection.getWorld().getName());
         sender.sendMessage(ChatColor.GRAY + ChatColor.ITALIC.toString() + "Have you set the spawn point yet? Do so with /setspawnpoint at the desired location!");
     }
 }

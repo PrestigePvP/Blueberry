@@ -20,9 +20,8 @@ public class SetSpawnPointCommand extends GenericArgument {
     @Command(name = "setspawnpoint", description = "Command used to set the spawn point.", permission = "blueberry.admin", inGameOnly = true)
     public void onCommand(CommandArgs args) {
         Player player = args.getPlayer();
-
         SpawnManager spawnManager = getPlugin().getSpawnManager();
-
-        spawnManager.setSpawnPoint(player.getLocation().clone().add(0, 0.5, 0)); // Add .5 to a cloned player location to prevent being stuck in blocks.
+        spawnManager.setSpawnPoint(player.getLocation());
+        player.sendMessage(ChatColor.GREEN + "Set the spawn point!");
     }
 }

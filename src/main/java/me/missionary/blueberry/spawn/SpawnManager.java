@@ -6,7 +6,6 @@ import me.missionary.blueberry.Blueberry;
 import me.missionary.blueberry.utils.LocationUtils;
 import me.missionary.blueberry.utils.Manager;
 import org.bukkit.Location;
-import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.util.Vector;
 
 /**
@@ -39,6 +38,7 @@ public class SpawnManager extends Manager {
     @Override
     public void onEnable() {
         spawnPoint = LocationUtils.generateLocFromString(getPlugin().getConfig().getString("SPAWN.SPAWNPOINT"));
+        worldName = getPlugin().getConfig().getString("SPAWN.WORLDNAME");
         min = LocationUtils.deserialize(getPlugin().getConfig().getString("SPAWN.MIN"));
         max = LocationUtils.deserialize(getPlugin().getConfig().getString("SPAWN.MAX"));
     }
@@ -46,6 +46,7 @@ public class SpawnManager extends Manager {
     @Override
     public void onDisable() {
         getPlugin().getConfig().set("SPAWN.SPAWNPOINT", LocationUtils.getLocationAsString(spawnPoint));
+        getPlugin().getConfig().set("SPAWN.WORLDNAME", worldName);
         getPlugin().getConfig().set("SPAWN.MIN", LocationUtils.serializeVector(min));
         getPlugin().getConfig().set("SPAWN.MAX", LocationUtils.serializeVector(max));
     }

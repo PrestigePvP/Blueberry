@@ -13,6 +13,7 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.entity.EntityDamageEvent;
+import org.bukkit.event.entity.FoodLevelChangeEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.event.player.PlayerMoveEvent;
@@ -25,7 +26,6 @@ import org.bukkit.inventory.ItemStack;
 public class SpawnListeners implements Listener {
 
     private final Blueberry plugin;
-
 
     @EventHandler
     public void onPlayerJoin(PlayerJoinEvent event) {
@@ -57,17 +57,24 @@ public class SpawnListeners implements Listener {
         }
         if (plugin.getSpawnManager().contains(event.getTo()) && Scoreboard.getPlayer(event.getPlayer()).getTimer(CombatTagListener.COMBAT_TAG_KEY) != null) {
             event.setTo(event.getFrom());
-
         }
     }
 
     @EventHandler
-    public void onDamage(EntityDamageEvent event){
-        if (event.getEntity() instanceof Player){
+    public void onDamage(EntityDamageEvent event) {
+        if (event.getEntity() instanceof Player) {
             Player player = (Player) event.getEntity();
-            if (plugin.getSpawnManager().contains(player.getLocation())){
+            if (plugin.getSpawnManager().contains(player.getLocation())) {
                 event.setCancelled(true);
             }
+        }
+    }
+
+    @EventHandler
+    public void onHungerLoss(FoodLevelChangeEvent event) {
+        Player player = (Player) event.getEntity();
+        if (plugin.getSpawnManager().contains(player.getLocation())) {
+            event.setCancelled(true);
         }
     }
 }

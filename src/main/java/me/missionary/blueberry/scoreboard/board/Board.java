@@ -4,9 +4,9 @@
 
 package me.missionary.blueberry.scoreboard.board;
 
-import com.google.common.collect.Lists;
-import com.google.common.collect.Sets;
+import lombok.Getter;
 import me.missionary.blueberry.scoreboard.timer.Timer;
+import net.minecraft.util.org.apache.commons.lang3.StringUtils;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
@@ -19,9 +19,11 @@ import org.bukkit.scoreboard.Scoreboard;
 import org.bukkit.scoreboard.Team;
 
 import java.lang.ref.WeakReference;
-import java.util.*;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.List;
+import java.util.Set;
 import java.util.concurrent.atomic.AtomicBoolean;
-import java.util.stream.Collectors;
 
 /**
  * Created by Missionary on on 6/4/2017.
@@ -29,7 +31,9 @@ import java.util.stream.Collectors;
 public class Board implements Listener {
 
     private final WeakReference<Player> player;
+    @Getter
     private final Scoreboard scoreboard;
+    @Getter
     private final Objective objective;
     private BukkitTask task;
     private AtomicBoolean isDisplayingScoreboard = new AtomicBoolean(true);
@@ -66,35 +70,37 @@ public class Board implements Listener {
             @Override
             public void run() {
                 List<String> provided = lilac.getProvider().provide(getPlayer(), getTimers());
-                if (provided != null && !provided.isEmpty() && isDisplayingScoreboard.get()) {
+                scoreboard.getEntries().forEach(scoreboard::resetScores);
+                if (!provided.isEmpty() && isDisplayingScoreboard.get()) {
                     String title = lilac.getProvider().getTitle(player);
                     objective.setDisplayName(ChatColor.translateAlternateColorCodes('&', title));
-                    List<String> lines = net.minecraft.util.com.google.common.collect.Lists.newCopyOnWriteArrayList();
-                    lines.addAll(provided.stream().map(s -> ChatColor.translateAlternateColorCodes('&', s)).collect(Collectors.toList()));
-
 
                     int score;
                     if (lilac.getOptions().countUp()) {
                         score = 1;
-                        Collections.reverse(lines);
+                        Collections.reverse(provided);
                     } else {
                         score = 15;
                     }
 
-                    for (String line : lines) {
+                    for (String ln : provided) {
                         Team team = scoreboard.getTeam(ChatColor.values()[score].toString());
-                        if (line.length() < 16) {
-                            team.setPrefix(line);
-                            team.setSuffix("");
-                            lines.add(line);
+                        String text = ChatColor.translateAlternateColorCodes('&', ln);
+                        if (text.length() > 16) {
+                            String first = text.substring(0, 16);
+                            String second = text.substring(16, text.length());
+                            if (first.endsWith(String.valueOf(ChatColor.COLOR_CHAR))) {
+                                first = first.substring(0, first.length() - 1);
+                                second = ChatColor.COLOR_CHAR + second;
+                            }
+                            String lastColors = ChatColor.getLastColors(first);
+                            second = lastColors + second;
+                            team.setPrefix(first);
+                            team.setSuffix(StringUtils.left(second, 16));
                         } else {
-                            int splitAt = line.toCharArray()[14] == ChatColor.COLOR_CHAR ? 14 : 15;
-                            team.setPrefix(line.substring(0, splitAt));
-                            String remainder = (ChatColor.getLastColors(team.getPrefix()) + line.substring(splitAt));
-                            team.setSuffix(remainder.length() > 16 ? remainder.substring(0, Math.min(remainder.length(), 16)) : remainder);
-                            lines.add(team.getPrefix() + team.getSuffix());
+                            team.setSuffix("");
+                            team.setPrefix(text);
                         }
-
                         objective.getScore(team.getName()).setScore(score);
 
                         if (lilac.getOptions().countUp()) {
@@ -105,15 +111,6 @@ public class Board implements Listener {
                             score--;
                         }
                     }
-
-
-                    Set<String> finalLines = net.minecraft.util.com.google.common.collect.Sets.newConcurrentHashSet(lines);
-                    scoreboard.getEntries().forEach(entry -> {
-                        Team team = scoreboard.getTeam(entry);
-                        if (team != null && !finalLines.contains(team.getPrefix() + (team.getSuffix() == null ? "" : team.getSuffix()))) {
-                            scoreboard.resetScores(entry);
-                        }
-                    });
                 }
             }
         }.runTaskTimerAsynchronously(lilac.getPlugin(), 2L, 2L);

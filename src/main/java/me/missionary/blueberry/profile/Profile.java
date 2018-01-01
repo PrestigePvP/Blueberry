@@ -23,6 +23,10 @@ public class Profile { // TODO: 9/1/2017 Add killstreaks.
 
     @Getter
     @Setter
+    private transient int killsThisGame;
+
+    @Getter
+    @Setter
     private int deaths;
 
     @Getter

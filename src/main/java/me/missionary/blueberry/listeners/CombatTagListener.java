@@ -25,7 +25,6 @@ public class CombatTagListener implements Listener {
                 return;
             }
             if (event.getDamager() instanceof Player || (event.getDamager() instanceof Arrow && ((Arrow) event.getDamager()).getShooter() instanceof Player)) {
-                System.out.println("CALLED COMBATTAGLISTENER - ONEDE");
                 Player player = (Player) event.getEntity();
                 if (Scoreboard.getPlayer(player).getTimer(COMBAT_TAG_KEY) == null) {
                     new Timer(Scoreboard.getPlayer(player), COMBAT_TAG_KEY, 30L);
@@ -48,6 +47,9 @@ public class CombatTagListener implements Listener {
     public void onBowHitEvent(EntityDamageByEntityEvent event) {
         if (event.getEntity() instanceof Player) {
             Player player = (Player) event.getEntity();
+            if (Blueberry.getPlugin().getSpawnManager().contains(player.getLocation())) {
+                return;
+            }
             if (event.getDamager() instanceof Arrow) {
                 Arrow arrow = (Arrow) event.getDamager();
                 if (arrow.getShooter() instanceof Player) {

@@ -1,11 +1,17 @@
 SCOREBOARD:
-  TITLE: "&3&lFree-For-All"
+  TITLE: "&3&lFFA &7(No Debuff)"
   LINES:
     - "&r&7&m---------------------"
-    - "&c&lKills&7: &f%kills%"
+    - "&a&lKills&7: &f%kills%"
+    - " &aThis game&7: &f%kills_this%"
+    - "&c&lDeaths&7: &f%deaths%"
+    - "&6&lKit&7: &f%kit%"
     - "&e&lDate&7: &f%date%"
+    - "&c&lCombat&7: &f%combattag%"
+    - "&d&lPearl&7: &f%enderpearl%"
     - "&7&m---------------------&r"
 SPAWN:
   SPAWNPOINT: "world;0;99;0"
+  WORLDNAME:
   MIN:
   MAX:

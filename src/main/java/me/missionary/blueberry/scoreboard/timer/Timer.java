@@ -4,12 +4,9 @@ import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.Setter;
 import me.missionary.blueberry.scoreboard.board.Board;
-import org.apache.commons.lang.time.DurationFormatUtils;
-
-import java.text.DecimalFormat;
 
 /**
- * Created by Missionary (missionarymc@gmail.com)0 on 6/11/2017.
+ * Created by Missionary (missionarymc@gmail.com) on 6/11/2017.
  */
 public class Timer {
 
@@ -31,15 +28,11 @@ public class Timer {
         board.getTimers().add(this);
     }
 
-    public String getFormattedString() {
-        return DateTimeFormats.MIN_SECS.format(end - System.currentTimeMillis());
-    }
-
     public void setNewEnd(long duration) {
         setEnd(System.currentTimeMillis() + (duration * 1000));
     }
 
-    public void cancel() {
+    public void removeTimer() {
         board.getTimers().remove(this);
     }
 }

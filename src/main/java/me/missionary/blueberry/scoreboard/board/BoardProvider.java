@@ -1,10 +1,11 @@
 /*
  * Copyright Missionary (c) 2017. Unauthorized use of this work can/and will result in further action against the unauthorized user(s).
  */
-package me.missionary.blueberry.scoreboard.interfaces;
+package me.missionary.blueberry.scoreboard.board;
 
 import me.missionary.blueberry.scoreboard.timer.Timer;
 import org.bukkit.entity.Player;
+
 import java.util.List;
 import java.util.Set;
 
