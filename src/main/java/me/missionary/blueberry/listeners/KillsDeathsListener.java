@@ -2,6 +2,7 @@ package me.missionary.blueberry.listeners;
 
 import lombok.RequiredArgsConstructor;
 import me.missionary.blueberry.Blueberry;
+import me.missionary.blueberry.combatlogger.entity.LoggerEntity;
 import me.missionary.blueberry.kit.KitManager;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
@@ -42,15 +43,20 @@ public class KillsDeathsListener implements Listener {
 
         plugin.getProfileManager().getProfile(killed.getUniqueId()).ifPresent(profile -> profile.setDeaths(profile.getDeaths() + 1));
 
+        if (!killed.hasMetadata(LoggerEntity.KILLED_METADATA)) {
 
-        List<ItemStack> removeThis = new ArrayList<>();
-        for (ItemStack drop : event.getDrops()) {
-            if (drop.getType() != Material.POTION) {
-                removeThis.add(drop);
+            List<ItemStack> removeThis = new ArrayList<>();
+            for (ItemStack drop : event.getDrops()) {
+                if (drop.getType() != Material.POTION) {
+                    removeThis.add(drop);
+                }
             }
-        }
 
-        event.getDrops().removeAll(removeThis);
+            event.getDrops().removeAll(removeThis);
+        } else {
+            event.getDrops().removeAll(event.getDrops());
+            killed.removeMetadata(LoggerEntity.KILLED_METADATA, plugin);
+        }
     }
 
     @EventHandler

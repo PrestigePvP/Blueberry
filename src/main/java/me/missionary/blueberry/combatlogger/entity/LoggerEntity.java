@@ -10,6 +10,7 @@ import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Player;
 import org.bukkit.entity.Villager;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.metadata.FixedMetadataValue;
 import org.bukkit.plugin.Plugin;
 import org.bukkit.scheduler.BukkitTask;
 
@@ -18,6 +19,8 @@ import java.util.UUID;
 
 // CREDIT https://github.com/ijoeleoli/LoggerAPI
 public class LoggerEntity {
+
+    public static final String KILLED_METADATA = "KILLED";
 
     private static final int EXPIRE_TIME = 15;
 
@@ -83,6 +86,8 @@ public class LoggerEntity {
         Arrays.stream(this.contents).forEach(item -> this.world.dropItemNaturally(location, item));
 
         Arrays.stream(this.armour).forEach(item -> this.world.dropItemNaturally(location, item));
+
+        getPlayer().setMetadata(KILLED_METADATA, new FixedMetadataValue(plugin, null));
     }
 
     public void resetTimer() {

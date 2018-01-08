@@ -2,6 +2,7 @@ package me.missionary.blueberry.spawn;
 
 import lombok.RequiredArgsConstructor;
 import me.missionary.blueberry.Blueberry;
+import me.missionary.blueberry.combatlogger.entity.LoggerEntity;
 import me.missionary.blueberry.kit.KitManager;
 import me.missionary.blueberry.kit.inventory.KitSelectionInventory;
 import me.missionary.blueberry.listeners.CombatTagListener;
@@ -33,6 +34,10 @@ public class SpawnListeners implements Listener {
             plugin.getProfileManager().createProfile(event.getPlayer().getUniqueId());
         }
         Player player = event.getPlayer();
+        if (player.hasMetadata(LoggerEntity.KILLED_METADATA)) {
+            player.setHealth(0.0);
+            return;
+        }
         event.setJoinMessage(null);
         player.teleport(plugin.getSpawnManager().getSpawnPoint() == null ? Bukkit.getWorld("world").getSpawnLocation() : plugin.getSpawnManager().getSpawnPoint());
         player.getInventory().clear();
