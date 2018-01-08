@@ -1,7 +1,9 @@
 package me.missionary.blueberry;
 
 import com.mongodb.MongoClient;
-import com.mongodb.MongoClientURI;
+import com.mongodb.MongoClientOptions;
+import com.mongodb.MongoCredential;
+import com.mongodb.ServerAddress;
 import com.mongodb.client.MongoDatabase;
 import lombok.Getter;
 import me.missionary.blueberry.combatlogger.LoggerManager;
@@ -33,6 +35,7 @@ import net.minecraft.util.com.google.gson.GsonBuilder;
 import org.bukkit.plugin.java.JavaPlugin;
 
 import java.util.Arrays;
+import java.util.Collections;
 
 /**
  * Created by Missionary (missionarymc@gmail.com) on 9/1/2017.
@@ -104,11 +107,9 @@ public class Blueberry extends JavaPlugin {
 
     private void initalizeMongo() {
         databaseConfiguration = new DatabaseConfiguration(this);
-     /*   MongoClientOptions options = MongoClientOptions.builder().socketKeepAlive(true).build(); // TODO: 9/1/2017 Remove the deprecated method, was a quick fix for sockets timing out.
+        MongoClientOptions options = MongoClientOptions.builder().socketKeepAlive(true).build();
         mongoClient = new MongoClient(new ServerAddress(getDatabaseConfiguration().getHostName()), Collections.singletonList(MongoCredential.createCredential(getDatabaseConfiguration().getUser(), getDatabaseConfiguration().getDatabaseName(), getDatabaseConfiguration().getPassword().toCharArray())), options);
-        mongoDatabase = mongoClient.getDatabase(getDatabaseConfiguration().getDatabaseName());*/
-        mongoClient = new MongoClient(new MongoClientURI("mongodb://user:blueberrypassword@cluster0-shard-00-00-tpqqx.mongodb.net:27017,cluster0-shard-00-01-tpqqx.mongodb.net:27017,cluster0-shard-00-02-tpqqx.mongodb.net:27017/test?ssl=true&replicaSet=Cluster0-shard-0&authSource=admin"));
-        mongoDatabase = mongoClient.getDatabase("test");
+        mongoDatabase = mongoClient.getDatabase(getDatabaseConfiguration().getDatabaseName());
     }
 
     private void initalizeListeners() {
